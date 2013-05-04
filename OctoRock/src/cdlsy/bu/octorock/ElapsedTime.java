@@ -9,7 +9,7 @@ public class ElapsedTime {
 
 	public ElapsedTime() {
 		startTime = SystemClock.elapsedRealtime();
-	};
+	}
 
 	public long get() {
 		return SystemClock.elapsedRealtime() - startTime;

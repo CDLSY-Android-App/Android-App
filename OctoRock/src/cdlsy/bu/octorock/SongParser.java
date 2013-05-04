@@ -7,8 +7,6 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-import android.util.Log;
-
 /*
  * Parses a song map in XML of the following format:
  * 
@@ -32,6 +30,7 @@ public class SongParser {
 	private XmlPullParser parser;
 
 	// "is" is what song the user would like to open
+    // use: getAssets().open("<filename>")
 	public SongParser(InputStream is) throws XmlPullParserException, IOException {
 		XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
 		factory.setNamespaceAware(true);
@@ -41,7 +40,7 @@ public class SongParser {
 
 	// Returns a number corresponding to the next time notes should be released.
 	// Returns -1 if no more times are in the file.
-	public double getNextTime() throws XmlPullParserException, IOException {
+	public int getNextTime() throws XmlPullParserException, IOException {
 
 		String name = parser.getName();
 		int eventType = parser.getEventType();
@@ -58,8 +57,16 @@ public class SongParser {
 		}
 
 		parser.next(); // Move to text following <t>
-		return Double.parseDouble(parser.getText());
+		return Integer.parseInt(parser.getText());
 	}
+	
+	public int getCurrentTime() throws XmlPullParserException {
+		if(parser.getEventType() != XmlPullParser.TEXT)
+			return -1;
+		
+		return Integer.parseInt(parser.getText());
+	}
+	
 
 	// Returns a 6 element array containing 1 or 0 if the note should be played.
 	// Values are -1 if no more notes are in the file.
@@ -85,5 +92,6 @@ public class SongParser {
 
 		return notes;
 	}
+	
 
 }
